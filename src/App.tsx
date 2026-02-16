@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { supabase } from './lib/supabase';
 import { useAppDispatch } from './store/hooks';
@@ -18,6 +18,9 @@ import PostZoom from './pages/PostZoom';
 function App() {
   const dispatch = useAppDispatch();
 
+  const [session, setSession] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     // 1) On app load, get the current session and store the user in Redux
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -26,12 +29,15 @@ function App() {
 
     // 2) Subscribe to auth state changes to keep Redux in sync on login/logout
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      dispatch(setUser(session?.user ?? null));
+      setSession(session);
+      setLoading(false);
     });
 
     // Clean up subscription when component unmounts
     return () => subscription.unsubscribe();
   }, [dispatch]);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <BrowserRouter>
