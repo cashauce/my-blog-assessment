@@ -2,11 +2,14 @@ import { useActionState } from 'react';
 import { supabase } from '../lib/supabase';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../store/hooks';
+import { setUser } from '../store/authSlice';
 
 // Registration page: collects email+password and calls Supabase signUp.
 // Uses `useActionState` helper to integrate with the app's form action flow.
 export default function Register() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // Form handler used by `useActionState`.
   // Receives `FormData` from the form and calls Supabase signUp.
@@ -15,10 +18,14 @@ export default function Register() {
     const password = formData.get('password') as string;
 
     // Call Supabase auth sign-up
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
 
     // If there's an error, return it to be shown in the UI
     if (error) return { error: error.message };
+
+    // On successful sign-up, the user is automatically signed in.
+    // We need to update our Redux store with the new user info.
+    dispatch(setUser(data?.user ?? null));
 
     // On success navigate to home (note: path must be "/")
     navigate('/');

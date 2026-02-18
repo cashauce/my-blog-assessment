@@ -1,10 +1,13 @@
 import { useActionState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAppDispatch } from '../store/hooks';
+import { setUser } from '../store/authSlice';
 
 // Login page: signs in using Supabase email/password and redirects to home
 export default function Login() {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   // Handler used by `useActionState` which receives the FormData
   async function handleLogin(_prevState: any, formData: FormData) {
@@ -12,9 +15,11 @@ export default function Login() {
     const password = formData.get('password') as string;
 
     // Call Supabase sign-in method
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) return { error: error.message };
+
+    dispatch(setUser(data?.session?.user ?? null));
 
     // On success navigate to home
     navigate('/');

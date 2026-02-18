@@ -7,6 +7,8 @@ import { setUser } from './store/authSlice';
 // Components
 import Navbar from './components/NavBar';
 import ProtectedRoute from './components/ProtectedRoute';
+import ChatWidget from './components/ChatWidget';
+
 // Pages
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -14,6 +16,7 @@ import CreateBlog from './pages/CreateBlog';
 import Home from './pages/Home';
 import EditPost from './pages/EditPost';
 import PostZoom from './pages/PostZoom';
+
 
 function App() {
   const dispatch = useAppDispatch();

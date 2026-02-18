@@ -1,15 +1,23 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import { useAppSelector } from '../store/hooks';
+import { useAppDispatch } from '../store/hooks';
+import { setUser } from '../store/authSlice';
+
 
 // Global navigation bar. Shows different links depending on auth state.
 export default function Navbar() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   // Grab the auth state from Redux
   const { user, isAuthenticated } = useAppSelector((state) => state.auth);
 
   // Logout by calling Supabase signOut; auth listener in App will update Redux
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    dispatch(setUser(null));
+    navigate('/login');
+
   };
 
   return (
