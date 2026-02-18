@@ -64,6 +64,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Routes>
+        {session && <ChatWidget />} {/* Show chat widget only when logged in */ }
       </div>
     </BrowserRouter>
   );
