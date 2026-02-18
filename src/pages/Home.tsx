@@ -25,7 +25,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [page, setPage] = useState(0);
-  const POSTS_PER_PAGE = 5; // number of posts per page
+  const POSTS_PER_PAGE = 4; // number of posts per page
 
   useEffect(() => {
     // Fetch the current user and a page of posts from Supabase
